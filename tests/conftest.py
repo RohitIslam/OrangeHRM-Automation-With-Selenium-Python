@@ -8,6 +8,7 @@ from selenium import webdriver
 def setup(request):
     # Initializing the Chrome browser
     driver = webdriver.Chrome()
+    driver.implicitly_wait(5)
 
     # Maximizing the browser window and hitting the target Url
     driver.maximize_window()
