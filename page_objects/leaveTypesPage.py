@@ -24,5 +24,5 @@ class LeaveTypesPage:
     def getLeaveTypeSaveButton(self):
         return self.driver.find_element(*LeaveTypesPage.leaveType_save_button)
 
-    def getSaveText(self):
+    def getLeaveTypeSaveText(self):
         return self.driver.find_element(*LeaveTypesPage.save_message).text

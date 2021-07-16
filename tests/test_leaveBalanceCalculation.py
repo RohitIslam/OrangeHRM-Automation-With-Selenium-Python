@@ -12,7 +12,6 @@ from utilities.baseClass import BaseClass
 
 class TestLeaveBalanceCalculation(BaseClass):
     def test_leave_balance_calculation(self):
-        action = ActionChains(self.driver)
 
         loginPage = LoginPage(self.driver)
         menuNavigation = MenuNavigation(self.driver)
@@ -40,8 +39,7 @@ class TestLeaveBalanceCalculation(BaseClass):
         leaveTypesPage.getIsEntitlementCheckbox().click()
         leaveTypesPage.getLeaveTypeSaveButton().click()
 
-        assert leaveTypesPage.getSaveText() == "Successfully Saved", "Save message did not matched."
-        self.driver.refresh()
+        assert leaveTypesPage.getLeaveTypeSaveText() == "Successfully Saved", "Save message did not matched."
 
         # Adding Leave Entitlements
         entitlement_days = 30
@@ -51,8 +49,18 @@ class TestLeaveBalanceCalculation(BaseClass):
         action.move_to_element(menuNavigation.getAddEntitlementButton()).click().perform()
 
         leaveEntitlementsPage.getMultipleEmployeesCheckbox().click()
-        self.selectByText(leaveEntitlementsPage.getLeaveTypeDropdown(), leave_type)
+        self.verifyElementPresent(leaveEntitlementsPage.employee_match_text_locator)
+        self.selectOptionByText(leaveEntitlementsPage.getLeaveTypeDropdown(), leave_type)
         leaveEntitlementsPage.getEntitlementField().send_keys(entitlement_days)
-
-        time.sleep(2)
         leaveEntitlementsPage.getEntitlementSaveButton().click()
+
+        # Handling Employee List Modal
+        self.verifyElementPresent(leaveEntitlementsPage.employee_list_table)
+        self.verifyElementPresent(leaveEntitlementsPage.entitlement_confirm_button)
+        leaveEntitlementsPage.getEntitlementConfirmButton().click()
+        self.verifyElementPresent(leaveEntitlementsPage.save_message)
+
+        assert leaveEntitlementsPage.getEntitlementSaveText() == "Entitlements added to 40 employees(s)", \
+            "Save message did not matched."
+
+        # Login as Employee and apply for the 5days
