@@ -1,8 +1,8 @@
 import time
 
 from selenium.webdriver import ActionChains
-from selenium.webdriver.support.select import Select
 
+from page_objects.applyLeavePage import ApplyLeavePage
 from page_objects.leaveEntitlementsPage import LeaveEntitlementsPage
 from page_objects.menuNavigation import MenuNavigation
 from page_objects.leaveTypesPage import LeaveTypesPage
@@ -17,6 +17,7 @@ class TestLeaveBalanceCalculation(BaseClass):
         menuNavigation = MenuNavigation(self.driver)
         leaveTypesPage = LeaveTypesPage(self.driver)
         leaveEntitlementsPage = LeaveEntitlementsPage(self.driver)
+        applyLeavePage = ApplyLeavePage(self.driver)
 
         # Login as Admin
         admin_username = 'Admin'
@@ -60,11 +61,11 @@ class TestLeaveBalanceCalculation(BaseClass):
         leaveEntitlementsPage.getEntitlementConfirmButton().click()
         self.verifyElementPresent(leaveEntitlementsPage.save_message)
 
-        assert leaveEntitlementsPage.getEntitlementSaveText() == "Entitlements added to 40 employees(s)", \
+        assert "Entitlements added" in leaveEntitlementsPage.getEntitlementSaveText(), \
             "Save message did not matched."
 
         # Logout From Admin and Login as Employee
-        employee_username = 'Wright'
+        employee_username = 'Rohit'
         employee_pass = '1234qwer'
 
         menuNavigation.getWelcomeButton().click()
@@ -73,3 +74,22 @@ class TestLeaveBalanceCalculation(BaseClass):
         loginPage.getUsernameField().send_keys(employee_username)
         loginPage.getPassField().send_keys(employee_pass)
         loginPage.getLoginButton().click()
+
+        # Apply For Leave
+        action = ActionChains(self.driver)
+        self.verifyElementPresent(menuNavigation.leave_menu_button)
+        action.move_to_element(menuNavigation.getLeaveButton()).perform()
+        action.move_to_element(menuNavigation.getApplyLeaveButton()).click().perform()
+
+        self.selectOptionByText(applyLeavePage.getApplyLeaveTypeDropdown(), leave_type)
+        applyLeavePage.getApplyLeaveFromDateField().click()
+        self.verifyElementPresent(applyLeavePage.apply_leave_from_date_picker)
+        applyLeavePage.getApplyLeaveFromDatePicker().click()
+        applyLeavePage.getApplyLeaveToDateField().click()
+        self.verifyElementPresent(applyLeavePage.apply_leave_to_date_picker)
+        applyLeavePage.getApplyLeaveToDatePicker().click()
+        applyLeavePage.getApplyButton().click()
+
+        # Verifying Leave Balance
+        if '25.00' in applyLeavePage.getLeaveBalanceLeftText():
+            print(applyLeavePage.getLeaveBalanceLeftText())
