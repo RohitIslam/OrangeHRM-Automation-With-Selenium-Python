@@ -4,6 +4,7 @@ from selenium.webdriver import ActionChains
 
 from page_objects.applyLeavePage import ApplyLeavePage
 from page_objects.leaveEntitlementsPage import LeaveEntitlementsPage
+from page_objects.leaveListPage import LeaveListPage
 from page_objects.menuNavigation import MenuNavigation
 from page_objects.leaveTypesPage import LeaveTypesPage
 from page_objects.loginPage import LoginPage
@@ -18,6 +19,7 @@ class TestLeaveBalanceCalculation(BaseClass):
         leaveTypesPage = LeaveTypesPage(self.driver)
         leaveEntitlementsPage = LeaveEntitlementsPage(self.driver)
         applyLeavePage = ApplyLeavePage(self.driver)
+        leaveListPage = LeaveListPage(self.driver)
 
         # Login as Admin
         admin_username = 'Admin'
@@ -93,3 +95,21 @@ class TestLeaveBalanceCalculation(BaseClass):
         # Verifying Leave Balance
         if '25.00' in applyLeavePage.getLeaveBalanceLeftText():
             print(applyLeavePage.getLeaveBalanceLeftText())
+
+        #  Login as admin again and approve the leave
+
+        menuNavigation.getWelcomeButton().click()
+        menuNavigation.getLogoutButton().click()
+
+        loginPage.getUsernameField().send_keys(admin_username)
+        loginPage.getPassField().send_keys(admin_pass)
+        loginPage.getLoginButton().click()
+
+        action = ActionChains(self.driver)
+        action.move_to_element(menuNavigation.getLeaveButton()).perform()
+        action.move_to_element(menuNavigation.getLeaveListButton()).click().perform()
+
+        self.selectOptionByText(leaveListPage.getApproveDropdown(), 'Approve')
+        leaveListPage.getLeaveApproveSaveButton().click()
+
+        assert leaveListPage.getApproveSaveText() == "Successfully Updated", "Save message did not matched."

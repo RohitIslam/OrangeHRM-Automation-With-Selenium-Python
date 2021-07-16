@@ -13,6 +13,7 @@ class MenuNavigation:
     applyLeave_submenu_button = (By.ID, 'menu_leave_applyLeave')
     configure_submenu_button = (By.ID, "menu_leave_Configure")
     leave_types_button = (By.ID, 'menu_leave_leaveTypeList')
+    leaveList_submenu_button = (By.ID, 'menu_leave_viewLeaveList')
 
     entitlements_submenu_button = (By.ID, "menu_leave_Entitlements")
     add_entitlement_button = (By.ID, 'menu_leave_addLeaveEntitlement')
@@ -34,6 +35,9 @@ class MenuNavigation:
 
     def getLeaveTypesButton(self):
         return self.driver.find_element(*MenuNavigation.leave_types_button)
+
+    def getLeaveListButton(self):
+        return self.driver.find_element(*MenuNavigation.leaveList_submenu_button)
 
     def getEntitlementsButton(self):
         return self.driver.find_element(*MenuNavigation.entitlements_submenu_button)
