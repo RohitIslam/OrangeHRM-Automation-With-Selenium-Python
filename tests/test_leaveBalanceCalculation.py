@@ -1,6 +1,10 @@
-from selenium.webdriver import ActionChains
+import time
 
-from page_objects.dashboardPage import DashboardPage
+from selenium.webdriver import ActionChains
+from selenium.webdriver.support.select import Select
+
+from page_objects.leaveEntitlementsPage import LeaveEntitlementsPage
+from page_objects.menuNavigation import MenuNavigation
 from page_objects.leaveTypesPage import LeaveTypesPage
 from page_objects.loginPage import LoginPage
 from utilities.baseClass import BaseClass
@@ -11,8 +15,9 @@ class TestLeaveBalanceCalculation(BaseClass):
         action = ActionChains(self.driver)
 
         loginPage = LoginPage(self.driver)
-        dashboardPage = DashboardPage(self.driver)
+        menuNavigation = MenuNavigation(self.driver)
         leaveTypesPage = LeaveTypesPage(self.driver)
+        leaveEntitlementsPage = LeaveEntitlementsPage(self.driver)
 
         # Login as Admin
         admin_username = 'Admin'
@@ -23,16 +28,31 @@ class TestLeaveBalanceCalculation(BaseClass):
         loginPage.getLoginButton().click()
 
         # Creating Leave type
-        leave_type = 'AB - CD'
-        action.move_to_element(dashboardPage.getLeaveButton()).perform()
-        action.move_to_element(dashboardPage.getConfigureButton()).perform()
-        action.move_to_element(dashboardPage.getLeaveTypesButton()).click().perform()
+        leave_type = 'BD - EID'
+
+        action = ActionChains(self.driver)
+        action.move_to_element(menuNavigation.getLeaveButton()).perform()
+        action.move_to_element(menuNavigation.getConfigureButton()).perform()
+        action.move_to_element(menuNavigation.getLeaveTypesButton()).click().perform()
 
         leaveTypesPage.getAddLeaveTypeButton().click()
         leaveTypesPage.getLeaveTypeNameField().send_keys(leave_type)
         leaveTypesPage.getIsEntitlementCheckbox().click()
         leaveTypesPage.getLeaveTypeSaveButton().click()
 
-        # leaveType_save_text = leaveTypesPage.getSaveText().text
-
         assert leaveTypesPage.getSaveText() == "Successfully Saved", "Save message did not matched."
+        self.driver.refresh()
+
+        # Adding Leave Entitlements
+        entitlement_days = 30
+
+        action = ActionChains(self.driver)
+        action.move_to_element(menuNavigation.getEntitlementsButton()).perform()
+        action.move_to_element(menuNavigation.getAddEntitlementButton()).click().perform()
+
+        leaveEntitlementsPage.getMultipleEmployeesCheckbox().click()
+        self.selectByText(leaveEntitlementsPage.getLeaveTypeDropdown(), leave_type)
+        leaveEntitlementsPage.getEntitlementField().send_keys(entitlement_days)
+
+        time.sleep(2)
+        leaveEntitlementsPage.getEntitlementSaveButton().click()
