@@ -63,4 +63,13 @@ class TestLeaveBalanceCalculation(BaseClass):
         assert leaveEntitlementsPage.getEntitlementSaveText() == "Entitlements added to 40 employees(s)", \
             "Save message did not matched."
 
-        # Login as Employee and apply for the 5days
+        # Logout From Admin and Login as Employee
+        employee_username = 'Wright'
+        employee_pass = '1234qwer'
+
+        menuNavigation.getWelcomeButton().click()
+        menuNavigation.getLogoutButton().click()
+
+        loginPage.getUsernameField().send_keys(employee_username)
+        loginPage.getPassField().send_keys(employee_pass)
+        loginPage.getLoginButton().click()
