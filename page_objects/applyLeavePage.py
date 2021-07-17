@@ -6,8 +6,8 @@ class ApplyLeavePage:
     def __init__(self, driver):
         self.driver = driver
 
-    from_date = '16'
-    to_date = '22'
+    from_date = '26'
+    to_date = '30'
 
     apply_leave_type_dropdown = (By.ID, 'applyleave_txtLeaveType')
     apply_leave_from_date_field = (By.ID, 'applyleave_txtFromDate')
@@ -15,7 +15,7 @@ class ApplyLeavePage:
     apply_leave_to_date_field = (By.ID, 'applyleave_txtToDate')
     apply_leave_to_date_picker = (By.XPATH, f"//a[contains(text(),{to_date})]")
     apply_button = (By.ID, 'applyBtn')
-    leave_balance_left = (By.ID, 'applyleave_leaveBalance')
+    leave_balance_left = (By.XPATH, "//div[@id='applyleave_leaveBalance']")
 
     def getApplyLeaveTypeDropdown(self):
         return self.driver.find_element(*ApplyLeavePage.apply_leave_type_dropdown)

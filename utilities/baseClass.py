@@ -16,3 +16,7 @@ class BaseClass:
     def verifyElementPresent(self, locator):
         wait = WebDriverWait(self.driver, 5)
         wait.until(expected_conditions.presence_of_element_located(locator))
+
+    def verifyTextPresentInElement(self, locator, text):
+        wait = WebDriverWait(self.driver, 5)
+        wait.until(expected_conditions.text_to_be_present_in_element(locator, text))

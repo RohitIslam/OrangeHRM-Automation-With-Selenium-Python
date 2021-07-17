@@ -9,6 +9,8 @@ class MenuNavigation:
     welcome_user_button = (By.ID, 'welcome')
     logout_button = (By.XPATH, "//a[contains(text(),'Logout')]")
 
+    dashboard_menu_button = (By.ID, 'menu_dashboard_index')
+
     leave_menu_button = (By.ID, 'menu_leave_viewLeaveModule')
     applyLeave_submenu_button = (By.ID, 'menu_leave_applyLeave')
     configure_submenu_button = (By.ID, "menu_leave_Configure")
@@ -23,6 +25,9 @@ class MenuNavigation:
 
     def getLogoutButton(self):
         return self.driver.find_element(*MenuNavigation.logout_button)
+
+    def getDashboardButton(self):
+        return self.driver.find_element(*MenuNavigation.dashboard_menu_button)
 
     def getLeaveButton(self):
         return self.driver.find_element(*MenuNavigation.leave_menu_button)

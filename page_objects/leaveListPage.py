@@ -29,7 +29,7 @@ class LeaveListPage:
         for i in range(len(rows)):
             columns = rows[i].find_elements(*LeaveListPage.result_table_cols)
             for j in range(len(columns)):
-                if columns[j].text == "Rohit Islam":
+                if columns[j].text == "Alvi Tazwar":
                     return columns[7].find_element(By.TAG_NAME, 'select')
 
     def getApproveSaveText(self):

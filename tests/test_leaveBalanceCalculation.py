@@ -53,6 +53,7 @@ class TestLeaveBalanceCalculation(BaseClass):
 
         leaveEntitlementsPage.getMultipleEmployeesCheckbox().click()
         self.verifyElementPresent(leaveEntitlementsPage.employee_match_text_locator)
+
         self.selectOptionByText(leaveEntitlementsPage.getLeaveTypeDropdown(), leave_type)
         leaveEntitlementsPage.getEntitlementField().send_keys(entitlement_days)
         leaveEntitlementsPage.getEntitlementSaveButton().click()
@@ -60,6 +61,7 @@ class TestLeaveBalanceCalculation(BaseClass):
         # Handling Employee List Modal
         self.verifyElementPresent(leaveEntitlementsPage.employee_list_table)
         self.verifyElementPresent(leaveEntitlementsPage.entitlement_confirm_button)
+
         leaveEntitlementsPage.getEntitlementConfirmButton().click()
         self.verifyElementPresent(leaveEntitlementsPage.save_message)
 
@@ -67,7 +69,7 @@ class TestLeaveBalanceCalculation(BaseClass):
             "Save message did not matched."
 
         # Logout From Admin and Login as Employee
-        employee_username = 'Rohit'
+        employee_username = 'AlviT'
         employee_pass = '1234qwer'
 
         menuNavigation.getWelcomeButton().click()
@@ -79,24 +81,29 @@ class TestLeaveBalanceCalculation(BaseClass):
 
         # Apply For Leave
         action = ActionChains(self.driver)
-        self.verifyElementPresent(menuNavigation.leave_menu_button)
         action.move_to_element(menuNavigation.getLeaveButton()).perform()
         action.move_to_element(menuNavigation.getApplyLeaveButton()).click().perform()
 
         self.selectOptionByText(applyLeavePage.getApplyLeaveTypeDropdown(), leave_type)
+
+        self.verifyElementPresent(applyLeavePage.leave_balance_left)
+
         applyLeavePage.getApplyLeaveFromDateField().click()
         self.verifyElementPresent(applyLeavePage.apply_leave_from_date_picker)
         applyLeavePage.getApplyLeaveFromDatePicker().click()
+
         applyLeavePage.getApplyLeaveToDateField().click()
         self.verifyElementPresent(applyLeavePage.apply_leave_to_date_picker)
         applyLeavePage.getApplyLeaveToDatePicker().click()
+
         applyLeavePage.getApplyButton().click()
 
         # Verifying Leave Balance
-        if '25.00' in applyLeavePage.getLeaveBalanceLeftText():
-            print(applyLeavePage.getLeaveBalanceLeftText())
+        self.verifyTextPresentInElement(applyLeavePage.leave_balance_left, '25.00')
+        assert '25.00' in applyLeavePage.getLeaveBalanceLeftText(), "Leave Balance is not 25.00"
+        print(f"Leave Balance left - {applyLeavePage.getLeaveBalanceLeftText()[:5]}")
 
-        #  Login as admin again and approve the leave
+        #  Login As Admin Again And Approve The Leave
 
         menuNavigation.getWelcomeButton().click()
         menuNavigation.getLogoutButton().click()
@@ -113,3 +120,6 @@ class TestLeaveBalanceCalculation(BaseClass):
         leaveListPage.getLeaveApproveSaveButton().click()
 
         assert leaveListPage.getApproveSaveText() == "Successfully Updated", "Save message did not matched."
+
+        # Landing On The Dashboard After Completing The Test Scenario
+        menuNavigation.getDashboardButton().click()
