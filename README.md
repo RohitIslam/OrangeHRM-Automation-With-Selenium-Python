@@ -1,4 +1,4 @@
-Scenario One: Leave Balance Calculation
+Test Scenario: Leave Balance Calculation
 
 Steps:
 
@@ -13,3 +13,7 @@ Steps:
 5. After successful leave application check the leave balance is updated 25 and verifies it by printing match successful message in console.
 
 6. Login as admin again and approve the leave from that employee
+
+Automation Result:
+
+https://user-images.githubusercontent.com/17728657/127547318-fbfb7c01-16f7-42ca-ba99-a2d82ab0a658.mp4
